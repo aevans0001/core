@@ -220,3 +220,68 @@ async def test_oven_cook_mode_select_value_error(
             {ATTR_ENTITY_ID: entity_id, ATTR_OPTION: "broil"},
             blocking=True,
         )
+
+
+@pytest.mark.parametrize(
+    ("entity_id", "mock_fixture", "getter", "setter", "selected", "expected"),
+    [
+        (
+            "select.washer_what_to_wash",
+            "mock_washer_api",
+            "get_wash_cycle_pair",
+            "set_wash_cycle_pair",
+            "colors",
+            ("colors", "normal"),
+        ),
+        (
+            "select.washer_how_to_wash",
+            "mock_washer_api",
+            "get_wash_cycle_pair",
+            "set_wash_cycle_pair",
+            "quick",
+            ("regular", "quick"),
+        ),
+        (
+            "select.dryer_what_to_dry",
+            "mock_dryer_api",
+            "get_dry_cycle_pair",
+            "set_dry_cycle_pair",
+            "colors",
+            ("colors", "normal"),
+        ),
+        (
+            "select.dryer_how_to_dry",
+            "mock_dryer_api",
+            "get_dry_cycle_pair",
+            "set_dry_cycle_pair",
+            "quick",
+            ("regular", "quick"),
+        ),
+    ],
+)
+async def test_laundry_cycle_selects(
+    hass: HomeAssistant,
+    entity_id: str,
+    mock_fixture: str,
+    getter: str,
+    setter: str,
+    selected: str,
+    expected: tuple[str, str],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test washer and dryer What/How cycle selects."""
+    mock = request.getfixturevalue(mock_fixture)
+    getattr(mock, getter).return_value = ("regular", "normal")
+    await init_integration(hass)
+
+    state = hass.states.get(entity_id)
+    assert state is not None
+    assert state.state in {"regular", "normal"}
+
+    await hass.services.async_call(
+        SELECT_DOMAIN,
+        SERVICE_SELECT_OPTION,
+        {ATTR_ENTITY_ID: entity_id, ATTR_OPTION: selected},
+        blocking=True,
+    )
+    getattr(mock, setter).assert_awaited_once_with(*expected)
