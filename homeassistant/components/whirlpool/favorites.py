@@ -25,7 +25,6 @@ from whirlpool.httpapi.dryer import (
     TIMED_DRY_GROUP_CYCLES,
     TIMED_DRY_MDT_ALLOWED_SECONDS,
     WRINKLE_SHIELD_SET_VALUES,
-    Dryer as HttpDryer,
 )
 from whirlpool.dryer import Dryer
 from whirlpool.washer import Washer
@@ -311,19 +310,36 @@ def dryer_favorite_writes(recipe: DryerFavorite) -> list[dict[str, str]]:
 
 
 async def apply_dryer_favorite(dryer: Dryer, recipe: DryerFavorite) -> bool:
-    """Send a dryer recipe: cycle selection first, then each setting.
-
-    Never sends an operation, so it never Starts the dryer. Returns False
-    (after sending nothing further) as soon as a write is refused.
-    """
-    writes = dryer_favorite_writes(recipe)  # validate everything before sending
-    if not isinstance(dryer, HttpDryer):
-        return False
+    """Apply a dryer recipe through public library setters without starting."""
+    dryer_favorite_writes(recipe)  # Validate the full recipe before any write.
     if not await dryer.set_dry_cycle_pair(recipe.what, recipe.how):
         return False
-    for body in writes:
-        if not await dryer.send_attributes(body):
-            return False
+    if recipe.temperature is not None and not await dryer.set_temperature(
+        recipe.temperature
+    ):
+        return False
+    if recipe.dryness is not None and not await dryer.set_dryness(recipe.dryness):
+        return False
+    if recipe.wrinkle_shield is not None and not await dryer.set_wrinkle_shield(
+        recipe.wrinkle_shield
+    ):
+        return False
+    if recipe.static_guard is not None and not await dryer.set_static_guard(
+        recipe.static_guard
+    ):
+        return False
+    if recipe.damp_signal is not None and not await dryer.set_damp_notification_tone_volume(
+        int(DAMP_SIGNAL_SET_VALUES[recipe.damp_signal])
+    ):
+        return False
+    if recipe.eco_boost is not None and not await dryer.set_eco_boost(
+        recipe.eco_boost
+    ):
+        return False
+    if recipe.manual_dry_time is not None and not await dryer.set_manual_dry_time(
+        int(recipe.manual_dry_time) * 60
+    ):
+        return False
     return True
 
 
