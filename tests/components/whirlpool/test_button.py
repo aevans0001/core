@@ -85,3 +85,116 @@ async def test_stop_button_failure(
             {ATTR_ENTITY_ID: entity_id},
             blocking=True,
         )
+
+
+@pytest.mark.parametrize(
+    ("entity_id", "mock_fixture", "machine_state", "command"),
+    [
+        (
+            "button.washer_start",
+            "mock_washer_api",
+            whirlpool.washer.MachineState.Setting,
+            "start",
+        ),
+        (
+            "button.washer_pause",
+            "mock_washer_api",
+            whirlpool.washer.MachineState.RunningMainCycle,
+            "pause",
+        ),
+        (
+            "button.washer_resume",
+            "mock_washer_api",
+            whirlpool.washer.MachineState.Pause,
+            "resume",
+        ),
+        (
+            "button.washer_cancel",
+            "mock_washer_api",
+            whirlpool.washer.MachineState.RunningMainCycle,
+            "cancel",
+        ),
+        (
+            "button.dryer_start",
+            "mock_dryer_api",
+            whirlpool.dryer.MachineState.Setting,
+            "start",
+        ),
+        (
+            "button.dryer_pause",
+            "mock_dryer_api",
+            whirlpool.dryer.MachineState.RunningMainCycle,
+            "pause",
+        ),
+        (
+            "button.dryer_resume",
+            "mock_dryer_api",
+            whirlpool.dryer.MachineState.Pause,
+            "resume",
+        ),
+        (
+            "button.dryer_cancel",
+            "mock_dryer_api",
+            whirlpool.dryer.MachineState.RunningMainCycle,
+            "cancel",
+        ),
+    ],
+)
+async def test_laundry_command_buttons(
+    hass: HomeAssistant,
+    entity_id: str,
+    mock_fixture: str,
+    machine_state,
+    command: str,
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test washer and dryer command buttons."""
+    mock = request.getfixturevalue(mock_fixture)
+    mock.get_machine_state.return_value = machine_state
+    mock.get_remote_control_enabled.return_value = True
+    await init_integration(hass)
+
+    state = hass.states.get(entity_id)
+    assert state is not None
+    assert state.state != "unavailable"
+
+    await hass.services.async_call(
+        BUTTON_DOMAIN,
+        SERVICE_PRESS,
+        {ATTR_ENTITY_ID: entity_id},
+        blocking=True,
+    )
+    getattr(mock, command).assert_awaited_once_with()
+
+
+@pytest.mark.parametrize(
+    ("entity_id", "mock_fixture", "machine_state"),
+    [
+        (
+            "button.washer_start",
+            "mock_washer_api",
+            whirlpool.washer.MachineState.Setting,
+        ),
+        (
+            "button.dryer_start",
+            "mock_dryer_api",
+            whirlpool.dryer.MachineState.Setting,
+        ),
+    ],
+)
+async def test_laundry_command_buttons_require_remote_control(
+    hass: HomeAssistant,
+    entity_id: str,
+    mock_fixture: str,
+    machine_state,
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test laundry commands are unavailable when remote control is disabled."""
+    mock = request.getfixturevalue(mock_fixture)
+    mock.get_machine_state.return_value = machine_state
+    mock.get_remote_control_enabled.return_value = False
+    await init_integration(hass)
+
+    state = hass.states.get(entity_id)
+    assert state is not None
+    assert state.state == "unavailable"
