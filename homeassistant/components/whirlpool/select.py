@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import logging
 from typing import Any, ClassVar, Final, override
 
+import probatio
 from whirlpool.appliance import Appliance
 from whirlpool.dryer import Dryer
 from whirlpool.oven import Cavity as OvenCavity, CookMode, Oven
@@ -14,8 +15,6 @@ from whirlpool.httpapi.washer import (
     WASH_TEMPERATURE_REVERSE,
 )
 from whirlpool.washer import Washer
-
-import probatio
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.const import UnitOfTemperature
