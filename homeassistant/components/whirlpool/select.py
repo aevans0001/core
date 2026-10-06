@@ -126,7 +126,7 @@ DRYER_DRYNESS_OPTIONS: Final = ["less", "normal", "more"]
 # Use Dryer.get_manual_dry_time_options_minutes() to obtain the per-cycle list.
 DRYER_MANUAL_DRY_TIME_QUICK_OPTIONS: Final = ["15", "30", "45"]
 DRYER_MANUAL_DRY_TIME_TIMED_OPTIONS: Final = ["30", "60", "90"]
-# Legacy union kept for decoding current_option only - do NOT expose as selectable options.
+# Read-only union kept for decoding current_option only; do not expose it as selectable options.
 DRYER_MANUAL_DRY_TIME_OPTIONS: Final = ["15", "30", "45", "60", "90"]
 # Temperature options - DDM-proven on WED9620HBK2 (values 0/1/2/5/8).
 DRYER_TEMPERATURE_OPTIONS: Final = ["air", "cool_low", "cool_mid", "warm_mid", "hot_mid"]
@@ -226,8 +226,8 @@ async def async_setup_entry(
     for entity in washer_entities:
         entity._label = labels[entity._appliance.said]
     entities.extend(washer_entities)
-    # Specialty (Download & Go) lives in the integration (specialty.py) so the
-    # library stays pinned to 60e0867 and regular/utility bodies are unchanged.
+    # Specialty (Download & Go) remains in the integration because it is
+    # Home Assistant-specific model handling, separate from generic cycle controls.
     entities.extend(
         WhirlpoolWasherSpecialtyCycleSelect(washer, labels[washer.said])
         for washer in appliances_manager.washers
