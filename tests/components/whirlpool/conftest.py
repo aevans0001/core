@@ -157,6 +157,7 @@ def mock_washer_api():
     mock_washer.get_fan_fresh.return_value = "off"
     mock_washer.get_steam.return_value = "off"
     mock_washer.get_utility_cycle.return_value = None
+    mock_washer.set_wash_cycle_pair.return_value = True
     mock_washer.get_dispense_1_enable.return_value = "enabled"
     mock_washer.get_dispense_2_enable.return_value = "enabled"
     mock_washer.get_dispense_1_concentration.return_value = "2x"
@@ -242,6 +243,14 @@ def mock_dryer_api():
     mock_dryer.get_eco_boost_str.return_value = "off"
     mock_dryer.get_utility_cycle.return_value = None
     mock_dryer.get_manual_dry_time_options_minutes.return_value = None
+    mock_dryer.get_cycle_changeable.return_value = True
+    mock_dryer.get_dryness_changeable.return_value = True
+    mock_dryer.get_temperature_changeable.return_value = True
+    mock_dryer.get_wrinkle_shield_changeable.return_value = True
+    mock_dryer.get_static_guard_changeable.return_value = True
+    mock_dryer.get_eco_boost_changeable.return_value = True
+    mock_dryer.get_manual_dry_time_changeable.return_value = True
+    mock_dryer.set_dry_cycle_pair.return_value = True
     mock_dryer.get_time_remaining.return_value = 3540
     mock_dryer.get_cycle_status_sensing.return_value = False
     mock_dryer.get_raw_data.return_value = {
