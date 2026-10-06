@@ -1054,10 +1054,10 @@ class WhirlpoolWasherUtilityCycleSelect(WhirlpoolWasherSelectBase):
 class WhirlpoolWasherSpecialtyCycleSelect(WhirlpoolWasherSelectBase):
     """Specialty cycle selector on the WFW9620HBK3 washer.
 
-    Writes the preset's seven DDM NonEditable attributes in one immediate
-    send_attributes() call (see specialty.py), whether Remote Control is on or
-    off, exactly like What/How and utility selection. HA sends no operation:
-    Start stays on the Start button and its Remote Control gate.
+    Selects a validated Download & Go preset through the public Whirlpool
+    library API, whether Remote Control is on or off, exactly like What/How
+    and utility selection. HA sends no operation: Start stays on the Start
+    button and its Remote Control gate.
 
     current_option comes from the shared CycleLabel: the Specialty HA last
     applied, kept while it still describes the configuration. It starts at
