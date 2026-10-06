@@ -262,10 +262,16 @@ def dryer_favorite_writes(recipe: DryerFavorite) -> list[dict[str, str]]:
     writes: list[dict[str, str]] = []
     if recipe.temperature is not None:
         writes.append(
-            {ATTR_TEMPERATURE: wire(recipe.temperature, TEMPERATURE_SET_VALUES, "temperature")}
+            {
+                ATTR_TEMPERATURE: wire(
+                    recipe.temperature, TEMPERATURE_SET_VALUES, "temperature"
+                )
+            }
         )
     if recipe.dryness is not None:
-        writes.append({ATTR_DRYNESS: wire(recipe.dryness, DRYNESS_SET_VALUES, "dryness")})
+        writes.append(
+            {ATTR_DRYNESS: wire(recipe.dryness, DRYNESS_SET_VALUES, "dryness")}
+        )
     if recipe.wrinkle_shield is not None:
         writes.append(
             {
@@ -276,7 +282,11 @@ def dryer_favorite_writes(recipe: DryerFavorite) -> list[dict[str, str]]:
         )
     if recipe.static_guard is not None:
         writes.append(
-            {ATTR_STATIC_GUARD: wire(recipe.static_guard, STATIC_GUARD_SET_VALUES, "static guard")}
+            {
+                ATTR_STATIC_GUARD: wire(
+                    recipe.static_guard, STATIC_GUARD_SET_VALUES, "static guard"
+                )
+            }
         )
     if recipe.damp_signal is not None:
         writes.append(
@@ -382,7 +392,9 @@ class FavoriteStore:
                 result[name] = recipe
         return result
 
-    async def async_save(self, kind: str, said: str, name: str, recipe: Favorite) -> str:
+    async def async_save(
+        self, kind: str, said: str, name: str, recipe: Favorite
+    ) -> str:
         """Save ``recipe`` under ``name``; a same-named Favorite is replaced.
 
         Names compare case-insensitively; the replaced Favorite keeps its
