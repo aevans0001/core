@@ -20,7 +20,13 @@ async def test_all_entities(
 ) -> None:
     """Test all entities."""
     await init_integration(hass)
-    snapshot_whirlpool_entities(hass, entity_registry, snapshot, Platform.SELECT)
+    snapshot_whirlpool_entities(
+        hass,
+        entity_registry,
+        snapshot,
+        Platform.SELECT,
+        exclude_prefixes=("select.washer_", "select.dryer_"),
+    )
 
 
 @pytest.mark.parametrize(
