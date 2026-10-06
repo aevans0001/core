@@ -7,6 +7,7 @@ installation receives one optional washer example, seeded only once.
 from dataclasses import asdict, dataclass, fields
 from typing import Any, Final
 
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.storage import Store
 
 from whirlpool.dryer import (
@@ -305,6 +306,8 @@ async def apply_dryer_favorite(dryer: Dryer, recipe: DryerFavorite) -> bool:
     (after sending nothing further) as soon as a write is refused.
     """
     writes = dryer_favorite_writes(recipe)  # validate everything before sending
+    if not isinstance(dryer, HttpDryer):
+        return False
     if not await dryer.set_dry_cycle_pair(recipe.what, recipe.how):
         return False
     for body in writes:
@@ -337,7 +340,7 @@ class FavoriteStore:
     deleting the starter cannot cause it to reappear on a later setup.
     """
 
-    def __init__(self, hass: Any) -> None:
+    def __init__(self, hass: HomeAssistant) -> None:
         self._store: Store[dict[str, Any]] = Store(hass, STORAGE_VERSION, STORAGE_KEY)
         self._data: dict[str, Any] = {}
         self._fresh_install = False
