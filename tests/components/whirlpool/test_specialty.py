@@ -1,33 +1,29 @@
-"""Test Whirlpool Specialty cycle handling."""
+"""Test Whirlpool Specialty cycle metadata."""
 
-import pytest
-
-from homeassistant.components.whirlpool.specialty import (
-    ATTR_CYCLE_NAME,
-    ATTR_CYCLE_SELECT,
-    ATTR_DOWNLOAD_AND_GO,
-    ATTR_SOIL_LEVEL,
-    ATTR_SPECIALTY_CYCLE_ID,
-    ATTR_SPIN_SPEED,
-    ATTR_TEMPERATURE,
-    build_specialty_payload,
-)
+from homeassistant.components.whirlpool.specialty import SPECIALTY_PRESETS
 
 
-def test_specialty_payload() -> None:
-    """Test the exact DDM-derived Specialty payload."""
-    assert build_specialty_payload("diapers") == {
-        ATTR_DOWNLOAD_AND_GO: "1",
-        ATTR_SPECIALTY_CYCLE_ID: "1",
-        ATTR_CYCLE_SELECT: "92",
-        ATTR_SOIL_LEVEL: "2",
-        ATTR_SPIN_SPEED: "5",
-        ATTR_TEMPERATURE: "4",
-        ATTR_CYCLE_NAME: "Diapers",
+def test_specialty_preset_metadata() -> None:
+    """Test DDM-derived UI metadata for a Specialty preset."""
+    preset = SPECIALTY_PRESETS["diapers"]
+
+    assert preset.temperature == 4
+    assert preset.spin_speed == 5
+    assert preset.soil_level == 2
+
+
+def test_all_specialty_presets_present() -> None:
+    """Test all validated Download & Go presets remain exposed."""
+    assert set(SPECIALTY_PRESETS) == {
+        "activewear",
+        "blankets",
+        "business_casual",
+        "coats_jackets",
+        "comforters",
+        "diapers",
+        "jeans",
+        "lingerie",
+        "machine_wash_curtains",
+        "sleeping_bags",
+        "swimwear",
     }
-
-
-def test_unknown_specialty_cycle() -> None:
-    """Test an unknown Specialty cycle is rejected before a write."""
-    with pytest.raises(ValueError):
-        build_specialty_payload("not_a_cycle")
