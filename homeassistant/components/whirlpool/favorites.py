@@ -10,7 +10,7 @@ from typing import Any, Final
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.storage import Store
 
-from whirlpool.dryer import (
+from whirlpool.httpapi.dryer import (
     ATTR_DAMP_NOTIFICATION_TONE_VOLUME,
     ATTR_DRYNESS,
     ATTR_ECO_BOOST,
@@ -28,8 +28,8 @@ from whirlpool.dryer import (
     TIMED_DRY_GROUP_CYCLES,
     TIMED_DRY_MDT_ALLOWED_SECONDS,
     WRINKLE_SHIELD_SET_VALUES,
-    Dryer,
 )
+from whirlpool.dryer import Dryer
 from whirlpool.washer import Washer
 
 STORAGE_VERSION: Final = 1
