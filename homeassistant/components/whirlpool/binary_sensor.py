@@ -34,7 +34,12 @@ WASHER_DRYER_SENSORS: list[WhirlpoolBinarySensorEntityDescription] = [
         key="door",
         device_class=BinarySensorDeviceClass.DOOR,
         value_fn=lambda appliance: appliance.get_door_open(),
-    )
+    ),
+    WhirlpoolBinarySensorEntityDescription(
+        key="remote_control_enabled",
+        translation_key="remote_control_enabled",
+        value_fn=lambda appliance: appliance.get_remote_control_enabled(),
+    ),
 ]
 
 
