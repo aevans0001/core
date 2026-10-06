@@ -328,9 +328,10 @@ async def apply_dryer_favorite(dryer: Dryer, recipe: DryerFavorite) -> bool:
         recipe.static_guard
     ):
         return False
-    if recipe.damp_signal is not None and not await dryer.set_damp_notification_tone_volume(
-        int(DAMP_SIGNAL_SET_VALUES[recipe.damp_signal])
-    ):
+    if recipe.damp_signal is not None:
+        volume = int(DAMP_SIGNAL_SET_VALUES[recipe.damp_signal])
+        if not await dryer.set_damp_notification_tone_volume(volume):
+            return False
         return False
     if recipe.eco_boost is not None and not await dryer.set_eco_boost(
         recipe.eco_boost
