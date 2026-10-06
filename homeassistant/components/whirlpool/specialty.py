@@ -89,7 +89,7 @@ def is_specialty_model_supported(washer: Washer) -> TypeGuard[HttpWasher]:
     )
 
 
-def supports_specialty_cycles(washer: Washer) -> TypeIs[HttpWasher]:
+def supports_specialty_cycles(washer: Washer) -> TypeGuard[HttpWasher]:
     """Return whether this HTTP washer exposes the Specialty cycle attributes."""
     return (
         is_specialty_model_supported(washer)
