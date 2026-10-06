@@ -45,10 +45,17 @@ def snapshot_whirlpool_entities(
     entity_registry: EntityRegistry,
     snapshot: SnapshotAssertion,
     platform: Platform,
+    *,
+    exclude_entity_ids: set[str] | None = None,
+    exclude_prefixes: tuple[str, ...] = (),
 ) -> None:
-    """Snapshot Whirlpool entities."""
+    """Snapshot pre-existing Whirlpool entities."""
     entities = hass.states.async_all(platform)
     for entity_state in entities:
+        if exclude_entity_ids and entity_state.entity_id in exclude_entity_ids:
+            continue
+        if entity_state.entity_id.startswith(exclude_prefixes):
+            continue
         entity_entry = entity_registry.async_get(entity_state.entity_id)
         assert entity_entry == snapshot(name=f"{entity_entry.entity_id}-entry")
         assert entity_state == snapshot(name=f"{entity_entry.entity_id}-state")
