@@ -15,7 +15,7 @@ from whirlpool.httpapi.washer import (
 )
 from whirlpool.washer import Washer
 
-import voluptuous as vol
+import probatio
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.const import UnitOfTemperature
@@ -315,7 +315,7 @@ async def async_setup_entry(
         (SERVICE_DELETE_FAVORITE, "async_delete_favorite"),
     ):
         platform.async_register_entity_service(
-            service, {vol.Required("name"): str}, _favorite_service(method)
+            service, {probatio.Required("name"): str}, _favorite_service(method)
         )
 
 
