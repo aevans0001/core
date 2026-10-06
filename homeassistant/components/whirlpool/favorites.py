@@ -7,9 +7,6 @@ installation receives one optional washer example, seeded only once.
 from dataclasses import asdict, dataclass, fields
 from typing import Any, Final
 
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.storage import Store
-
 from whirlpool.httpapi.dryer import (
     ATTR_DAMP_NOTIFICATION_TONE_VOLUME,
     ATTR_DRYNESS,
@@ -32,6 +29,9 @@ from whirlpool.httpapi.dryer import (
 )
 from whirlpool.dryer import Dryer
 from whirlpool.washer import Washer
+
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.storage import Store
 
 STORAGE_VERSION: Final = 1
 STORAGE_KEY: Final = "whirlpool.favorites"
