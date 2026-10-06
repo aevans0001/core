@@ -53,7 +53,14 @@ DEFAULT_OVEN_TEMP = 175
 
 WASHER_STEAM_OPTIONS: Final = ["off", "on"]
 DRYER_WRINKLE_SHIELD_OPTIONS: Final = ["off", "on", "on_with_steam"]
-WASHER_WHAT_OPTIONS: Final = ["regular", "colors", "whites", "towels", "delicates", "bulky"]
+WASHER_WHAT_OPTIONS: Final = [
+    "regular",
+    "colors",
+    "whites",
+    "towels",
+    "delicates",
+    "bulky",
+]
 WASHER_HOW_OPTIONS: Final = [
     "normal",
     "quick",
@@ -100,7 +107,14 @@ WASHER_SPECIALTY_CYCLE_OPTIONS: Final = [
 ]
 
 # Dryer What+How options - DDM-proven on WED9620HBK2.
-DRYER_WHAT_OPTIONS: Final = ["regular", "colors", "whites", "towels", "delicates", "bulky"]
+DRYER_WHAT_OPTIONS: Final = [
+    "regular",
+    "colors",
+    "whites",
+    "towels",
+    "delicates",
+    "bulky",
+]
 # How options differ from washer: timed_dry replaces cold_wash.
 DRYER_HOW_OPTIONS: Final = [
     "normal",
@@ -126,10 +140,17 @@ DRYER_DRYNESS_OPTIONS: Final = ["less", "normal", "more"]
 # Use Dryer.get_manual_dry_time_options_minutes() to obtain the per-cycle list.
 DRYER_MANUAL_DRY_TIME_QUICK_OPTIONS: Final = ["15", "30", "45"]
 DRYER_MANUAL_DRY_TIME_TIMED_OPTIONS: Final = ["30", "60", "90"]
-# Read-only union kept for decoding current_option only; do not expose it as selectable options.
+# Read-only union kept for decoding current_option only; do not expose it as
+# selectable options.
 DRYER_MANUAL_DRY_TIME_OPTIONS: Final = ["15", "30", "45", "60", "90"]
 # Temperature options - DDM-proven on WED9620HBK2 (values 0/1/2/5/8).
-DRYER_TEMPERATURE_OPTIONS: Final = ["air", "cool_low", "cool_mid", "warm_mid", "hot_mid"]
+DRYER_TEMPERATURE_OPTIONS: Final = [
+    "air",
+    "cool_low",
+    "cool_mid",
+    "warm_mid",
+    "hot_mid",
+]
 # Static Guard and Eco Boost are boolean DDM attributes.
 DRYER_TOGGLE_OPTIONS: Final = ["off", "on"]
 
@@ -189,13 +210,32 @@ async def async_setup_entry(
     # that changes a recipe-defining field reports to it.
     labels = {washer.said: CycleLabel() for washer in appliances_manager.washers}
     washer_entities: list[WhirlpoolWasherSelectBase] = []
-    washer_entities.extend(WhirlpoolWasherWhatSelect(washer) for washer in appliances_manager.washers)
-    washer_entities.extend(WhirlpoolWasherHowSelect(washer) for washer in appliances_manager.washers)
-    washer_entities.extend(WhirlpoolWasherDispenserEnableSelect(washer, 1) for washer in appliances_manager.washers)
-    washer_entities.extend(WhirlpoolWasherDispenserEnableSelect(washer, 2) for washer in appliances_manager.washers)
-    washer_entities.extend(WhirlpoolWasherDispenserConcentrationSelect(washer, 1) for washer in appliances_manager.washers)
-    washer_entities.extend(WhirlpoolWasherDispenserConcentrationSelect(washer, 2) for washer in appliances_manager.washers)
-    washer_entities.extend(WhirlpoolWasherDispenser2ContentsSelect(washer) for washer in appliances_manager.washers)
+    washer_entities.extend(
+        WhirlpoolWasherWhatSelect(washer) for washer in appliances_manager.washers
+    )
+    washer_entities.extend(
+        WhirlpoolWasherHowSelect(washer) for washer in appliances_manager.washers
+    )
+    washer_entities.extend(
+        WhirlpoolWasherDispenserEnableSelect(washer, 1)
+        for washer in appliances_manager.washers
+    )
+    washer_entities.extend(
+        WhirlpoolWasherDispenserEnableSelect(washer, 2)
+        for washer in appliances_manager.washers
+    )
+    washer_entities.extend(
+        WhirlpoolWasherDispenserConcentrationSelect(washer, 1)
+        for washer in appliances_manager.washers
+    )
+    washer_entities.extend(
+        WhirlpoolWasherDispenserConcentrationSelect(washer, 2)
+        for washer in appliances_manager.washers
+    )
+    washer_entities.extend(
+        WhirlpoolWasherDispenser2ContentsSelect(washer)
+        for washer in appliances_manager.washers
+    )
     washer_entities.extend(
         WhirlpoolWasherFanFreshSelect(washer)
         for washer in appliances_manager.washers
@@ -261,7 +301,9 @@ async def async_setup_entry(
         dryer_entity._label = dryer_labels[dryer_entity._appliance.said]
     entities.extend(dryer_entities)
     entities.extend(
-        WhirlpoolDryerFavoriteCycleSelect(dryer, dryer_labels[dryer.said], favorite_store)
+        WhirlpoolDryerFavoriteCycleSelect(
+            dryer, dryer_labels[dryer.said], favorite_store
+        )
         for dryer in appliances_manager.dryers
     )
     async_add_entities(entities)
@@ -769,11 +811,16 @@ class WhirlpoolWasherDispenser2ContentsSelect(WhirlpoolWasherSelectBase):
     _attr_options = DISPENSER_2_CONTENT_OPTIONS
 
     def __init__(self, appliance: Washer) -> None:
-        super().__init__(appliance, "washer_dispenser_2_contents", "-dispenser_2_contents")
+        super().__init__(
+            appliance, "washer_dispenser_2_contents", "-dispenser_2_contents"
+        )
 
     @property
     def available(self) -> bool:
-        return super().available and self._appliance.get_dispense_2_enable() == "enabled"
+        return (
+            super().available
+            and self._appliance.get_dispense_2_enable() == "enabled"
+        )
 
     @property
     def current_option(self) -> str | None:
@@ -1176,7 +1223,9 @@ class FavoriteSelectMixin:
             self._label_changed()  # the option list changed
 
 
-class WhirlpoolWasherFavoriteCycleSelect(FavoriteSelectMixin, WhirlpoolWasherSelectBase):
+class WhirlpoolWasherFavoriteCycleSelect(
+    FavoriteSelectMixin, WhirlpoolWasherSelectBase
+):
     """Apply or save a Home Assistant-local washer Favorite recipe.
 
     The label clears on What/How, Utility, Specialty, any cycle option, or a
@@ -1220,7 +1269,11 @@ class WhirlpoolWasherFavoriteCycleSelect(FavoriteSelectMixin, WhirlpoolWasherSel
             "fan_fresh": recipe.fan_fresh,
             "steam": recipe.steam,
         }
-        for field in ("dispenser_1_enable", "dispenser_2_enable", "dispenser_2_contents"):
+        for field in (
+            "dispenser_1_enable",
+            "dispenser_2_enable",
+            "dispenser_2_contents",
+        ):
             value = getattr(recipe, field)
             if value is not None:
                 values[field] = value
@@ -1304,7 +1357,7 @@ class WhirlpoolDryerSelectBase(WhirlpoolEntity, SelectEntity):
 
 
 class WhirlpoolDryerWrinkleShieldSelect(WhirlpoolDryerSelectBase):
-    """WrinkleShield control (off / on / on_with_steam) for the DDM-proven WED9620HBK2 dryer."""
+    """Control WrinkleShield for the DDM-proven WED9620HBK2 dryer."""
 
     _attr_options = DRYER_WRINKLE_SHIELD_OPTIONS
 
