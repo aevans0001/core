@@ -14,7 +14,7 @@ is decoded from CycleName, never from CycleSelect.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Final, TypeIs
+from typing import Final, TypeGuard
 
 from whirlpool.httpapi.washer import Washer as HttpWasher
 from whirlpool.washer import Washer
@@ -81,7 +81,7 @@ def build_specialty_payload(option: str) -> dict[str, str]:
     }
 
 
-def is_specialty_model_supported(washer: Washer) -> TypeIs[HttpWasher]:
+def is_specialty_model_supported(washer: Washer) -> TypeGuard[HttpWasher]:
     """Return whether the Specialty table applies to this HTTP washer model."""
     return (
         isinstance(washer, HttpWasher)
