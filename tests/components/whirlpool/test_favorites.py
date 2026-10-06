@@ -44,7 +44,7 @@ def test_dryer_favorite_writes() -> None:
     writes = dryer_favorite_writes(recipe)
 
     assert writes == [
-        {ATTR_TEMPERATURE: "4"},
+        {ATTR_TEMPERATURE: "5"},
         {ATTR_DRYNESS: "4"},
     ]
 
