@@ -14,8 +14,9 @@ is decoded from CycleName, never from CycleSelect.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Final
+from typing import Final, TypeIs
 
+from whirlpool.httpapi.washer import Washer as HttpWasher
 from whirlpool.washer import Washer
 
 SPECIALTY_SUPPORTED_MODEL: Final = "WFW9620HBK3"
@@ -80,13 +81,16 @@ def build_specialty_payload(option: str) -> dict[str, str]:
     }
 
 
-def is_specialty_model_supported(washer: Washer) -> bool:
-    """Return whether the Specialty table applies to this washer model."""
-    return washer.appliance_info.model_number == SPECIALTY_SUPPORTED_MODEL
+def is_specialty_model_supported(washer: Washer) -> TypeIs[HttpWasher]:
+    """Return whether the Specialty table applies to this HTTP washer model."""
+    return (
+        isinstance(washer, HttpWasher)
+        and washer.appliance_info.model_number == SPECIALTY_SUPPORTED_MODEL
+    )
 
 
-def supports_specialty_cycles(washer: Washer) -> bool:
-    """Return whether this washer exposes the Specialty cycle attributes."""
+def supports_specialty_cycles(washer: Washer) -> TypeIs[HttpWasher]:
+    """Return whether this HTTP washer exposes the Specialty cycle attributes."""
     return (
         is_specialty_model_supported(washer)
         and washer.has_attribute(ATTR_DOWNLOAD_AND_GO)
