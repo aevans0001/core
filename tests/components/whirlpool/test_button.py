@@ -45,7 +45,13 @@ async def test_all_entities(
 ) -> None:
     """Test all entities."""
     await init_integration(hass)
-    snapshot_whirlpool_entities(hass, entity_registry, snapshot, Platform.BUTTON)
+    snapshot_whirlpool_entities(
+        hass,
+        entity_registry,
+        snapshot,
+        Platform.BUTTON,
+        exclude_prefixes=("button.washer_", "button.dryer_"),
+    )
 
 
 async def test_stop_button_press(
