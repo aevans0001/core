@@ -1,9 +1,6 @@
 """Specialty (Download & Go) washer cycles for the DDM-proven WFW9620HBK3.
 
-Kept in the integration so the library can stay pinned to 60e0867, whose
-regular and utility cycle bodies are live-proven and must not change.
-
-Evidence (model-specific washer DDM, retained in private research): each preset is a CapabilityData entry
+Evidence from the model-specific washer DDM: each preset is a CapabilityData entry
 ``Cavity_CycleSetCycleName<Key>`` with an empty Required block and exactly
 seven NonEditable attributes. set_specialty_cycle() writes those seven, in the
 DDM's NonEditable order, in one send_attributes() call. It never writes
