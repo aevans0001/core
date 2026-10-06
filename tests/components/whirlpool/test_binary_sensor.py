@@ -25,6 +25,16 @@ async def test_all_entities(
     [
         ("binary_sensor.washer_door", "mock_washer_api", "get_door_open"),
         ("binary_sensor.dryer_door", "mock_dryer_api", "get_door_open"),
+        (
+            "binary_sensor.washer_remote_control_enabled",
+            "mock_washer_api",
+            "get_remote_control_enabled",
+        ),
+        (
+            "binary_sensor.dryer_remote_control_enabled",
+            "mock_dryer_api",
+            "get_remote_control_enabled",
+        ),
     ],
 )
 async def test_simple_binary_sensors(
