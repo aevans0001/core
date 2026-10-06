@@ -28,6 +28,7 @@ from whirlpool.httpapi.dryer import (
     TIMED_DRY_GROUP_CYCLES,
     TIMED_DRY_MDT_ALLOWED_SECONDS,
     WRINKLE_SHIELD_SET_VALUES,
+    Dryer as HttpDryer,
 )
 from whirlpool.dryer import Dryer
 from whirlpool.washer import Washer
