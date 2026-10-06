@@ -8,12 +8,12 @@ from typing import Any, ClassVar, Final, override
 from whirlpool.appliance import Appliance
 from whirlpool.dryer import Dryer
 from whirlpool.oven import Cavity as OvenCavity, CookMode, Oven
-from whirlpool.washer import (
+from whirlpool.httpapi.washer import (
     WASH_SOIL_LEVEL_REVERSE,
     WASH_SPIN_SPEED_REVERSE,
     WASH_TEMPERATURE_REVERSE,
-    Washer,
 )
+from whirlpool.washer import Washer
 
 import voluptuous as vol
 
